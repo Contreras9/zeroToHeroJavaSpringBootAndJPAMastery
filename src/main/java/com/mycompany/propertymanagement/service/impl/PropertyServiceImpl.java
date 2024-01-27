@@ -8,6 +8,10 @@ import com.mycompany.propertymanagement.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class PropertyServiceImpl implements PropertyService {
     @Autowired
@@ -25,5 +29,79 @@ public class PropertyServiceImpl implements PropertyService {
         propertyDTO = converter.convertEntityToDTO(entity);
 
         return propertyDTO;
+    }
+
+    @Override
+    public List<PropertyDTO> getAllProperties() {
+
+        List<PropertyDTO> propertyDTOList = new ArrayList<>();
+
+        List<PropertyEntity> listOfProps = (List<PropertyEntity>) repository.findAll();
+
+        for (PropertyEntity propertyEntity : listOfProps) {
+            PropertyDTO propertyDTO = converter.convertEntityToDTO(propertyEntity);
+            propertyDTOList.add(propertyDTO);
+        }
+        return propertyDTOList;
+    }
+
+    @Override
+    public PropertyDTO updateProperty(PropertyDTO propertyDTO, Long propertyId) {
+
+        Optional<PropertyEntity> optEntity = repository.findById(propertyId);
+        PropertyDTO dto = null;
+        if (optEntity.isPresent()) {
+
+            PropertyEntity propertyEntity = optEntity.get();
+            propertyEntity.setTitle(propertyDTO.getTitle());
+            propertyEntity.setDescription(propertyDTO.getDescription());
+            propertyEntity.setOwnerName(propertyDTO.getOwnerName());
+            propertyEntity.setOwnerEmail(propertyDTO.getOwnerEmail());
+            propertyEntity.setPrice(propertyDTO.getPrice());
+            propertyEntity.setAddress(propertyDTO.getAddress());
+            dto = converter.convertEntityToDTO(propertyEntity);
+
+            repository.save(propertyEntity);
+        }
+        return dto;
+    }
+
+    @Override
+    public PropertyDTO updatePropertyDescription(PropertyDTO propertyDTO, Long propertyId) {
+
+        Optional<PropertyEntity> optEntity = repository.findById(propertyId);
+        PropertyDTO dto = null;
+        if (optEntity.isPresent()) {
+
+            PropertyEntity propertyEntity = optEntity.get();
+            propertyEntity.setDescription(propertyDTO.getDescription());
+
+            dto = converter.convertEntityToDTO(propertyEntity);
+
+            repository.save(propertyEntity);
+        }
+        return dto;
+    }
+
+    @Override
+    public PropertyDTO updatePropertyPrice(PropertyDTO propertyDTO, Long propertyId) {
+
+        Optional<PropertyEntity> optEntity = repository.findById(propertyId);
+        PropertyDTO dto = null;
+        if (optEntity.isPresent()) {
+
+            PropertyEntity propertyEntity = optEntity.get();
+            propertyEntity.setPrice(propertyDTO.getPrice());
+
+            dto = converter.convertEntityToDTO(propertyEntity);
+
+            repository.save(propertyEntity);
+        }
+        return dto;
+    }
+
+    @Override
+    public void deleteProperty(Long propertyId) {
+        repository.deleteById(propertyId);
     }
 }

@@ -21,3 +21,7 @@ public class PropertyManagementApplication {
 //Controller Layer has a responsibility to take the request from the client, which is coming via HTTP protocol in the URL.
 //Service Layer has the responsibility to do some business logic.
 //Repository Layer will have the responsibility to connect to the database and save the information in the database.
+
+
+
+//Client --> Controller(Get allProperties) --> Service --> Repository --> Database --> Entity --> Converter(List<PropertyEntity>) --> List(PropertyDTO) --> Controller
